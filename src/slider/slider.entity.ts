@@ -1,24 +1,38 @@
 import {
   AutoIncrement,
   Column,
+  DataType,
   Model,
+  NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 
 @Table
 export class Slider extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
+  @Column({
+    type: DataType.INTEGER,
+    unique: true,
+    autoIncrement: true,
+    primaryKey: true,
+  })
   id: number;
 
-  @Column
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   name: string;
 
-  @Column
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   name_ru: string;
 
-  @Column
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   name_eng: string;
 }

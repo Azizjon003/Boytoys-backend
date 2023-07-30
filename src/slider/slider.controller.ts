@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
+  Param,
   ParseFilePipeBuilder,
+  Patch,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -25,23 +28,16 @@ export class SliderController {
   create(@Body() createSliderDto: createSliderDto): Promise<Slider> {
     return this.sliderService.create(createSliderDto);
   }
-  @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: 'public/img',
-        filename: (req, file, cb) => {
-          console.log(file);
-          const newfileName = `${Date.now()}.${file.mimetype.split('/')[1]}`;
-          cb(null, newfileName);
-        },
-      }),
-    }),
-  )
-  async local(@UploadedFile() file: Express.Multer.File) {
-    return {
-      statusCode: 200,
-      data: file.path,
-    };
+  @Patch('/:id')
+  update(
+    @Param('id') id: number,
+    @Body() createSliderDto: createSliderDto,
+  ): Promise<Slider> {
+    return this.sliderService.update(id, createSliderDto);
+  }
+
+  @Delete('/:id')
+  delete(@Param('id') id: number): Promise<HttpStatus> {
+    return this.sliderService.delete(id);
   }
 }

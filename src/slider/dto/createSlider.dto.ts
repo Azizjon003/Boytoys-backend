@@ -1,5 +1,5 @@
 export class createSliderDto {
   name: string;
   name_ru: string;
-  name_en: string;
+  name_eng: string;
 }

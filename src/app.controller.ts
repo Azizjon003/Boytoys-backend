@@ -25,9 +25,10 @@ export class AppController {
     }),
   )
   async local(@UploadedFile() file: Express.Multer.File) {
+    const url = `http://localhost:3000/img/${file.filename}`;
     return {
-      statusCode: 200,
-      data: file.path,
+      status: 'success',
+      url: url,
     };
   }
 }

@@ -14,6 +14,11 @@ import { AppController } from './app.controller';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/',
+      serveStaticOptions: {
+        redirect: true,
+        index: false,
+      },
     }),
     GetDataModule,
     SliderModule,
