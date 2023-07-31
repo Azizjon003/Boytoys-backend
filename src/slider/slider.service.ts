@@ -14,6 +14,13 @@ export class SliderService {
     }
     return sliders;
   }
+  async findOne(id: number): Promise<Slider> {
+    const slider = await Slider.findByPk(id);
+    if (!slider) {
+      throw new NotFoundException('Slider not found');
+    }
+    return slider;
+  }
   async create(createSliderDto: createSliderDto): Promise<Slider> {
     const slider = new Slider();
     slider.name = createSliderDto.name;
@@ -23,22 +30,20 @@ export class SliderService {
     return slider;
   }
   async update(id, createSliderDto: createSliderDto): Promise<Slider> {
-    const slider = await Slider.findByPk(id);
+    const slider = await this.findOne(id);
     if (!slider) {
       throw new NotFoundException('Slider not found');
     }
-    slider.name = createSliderDto.name;
-    slider.name_ru = createSliderDto.name_ru;
-    slider.name_eng = createSliderDto.name_eng;
+    slider.name = createSliderDto.name || slider.name;
+    slider.name_ru = createSliderDto.name_ru || slider.name_ru;
+    slider.name_eng = createSliderDto.name_eng || slider.name_eng;
     await slider.save();
     return slider;
   }
   async delete(id: number): Promise<HttpStatus> {
-    const slider = await Slider.findByPk(id);
-    if (!slider) {
-      throw new NotFoundException('Slider not found');
-    }
+    const slider = await this.findOne(id);
+
     await slider.destroy();
-    return HttpStatus.OK;
+    return HttpStatus.NO_CONTENT;
   }
 }

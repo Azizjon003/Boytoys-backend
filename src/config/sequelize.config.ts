@@ -12,6 +12,7 @@ export const databaseProviders = [
         username: 'postgres',
         password: '1234',
         database: 'boytoys',
+        logging: false,
       });
 
       sequelize.addModels([Slider]);
