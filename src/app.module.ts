@@ -9,6 +9,8 @@ import { SliderModule } from './slider/slider.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
+import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,8 +24,9 @@ import { AppController } from './app.controller';
     }),
     GetDataModule,
     SliderModule,
+    AuthModule,
   ],
-  controllers: [SliderController, AppController],
+  controllers: [SliderController, AppController, AuthController],
   providers: [...databaseProviders, SliderService],
 })
 export class AppModule {}
