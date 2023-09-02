@@ -19,7 +19,6 @@ export class Auth extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
   })
   name: string;
 
@@ -32,13 +31,11 @@ export class Auth extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
   })
   gender: string;
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
   })
   birthday: Date;
 
@@ -49,15 +46,29 @@ export class Auth extends Model {
   phoneVerifired: boolean;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  password: string;
-
-  @Column({
     type: DataType.ENUM,
     values: ['user', 'admin'],
     defaultValue: 'user',
   })
   role: string;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  createdAt?: Date;
+
+  @Column({
+    type: DataType.TEXT,
+  })
+  token: string;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  codeExpired: Date;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  code: string;
 }

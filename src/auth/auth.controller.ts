@@ -2,12 +2,19 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { createAuthDto, loginAuthDto } from './dto/auth.dto';
+import {
+  checkPhoneDto,
+  createAuthDto,
+  loginAuthDto,
+  updateMeDto,
+  updatePasswordDto,
+} from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
 import { getUser } from './getUser.decorator';
 import { Auth } from './auth.entity';
@@ -26,9 +33,29 @@ export class AuthController {
     return this.authservice.login(loginAuthDto);
   }
 
+  @Post('check-phone')
+  checkPhone(@Body(ValidationPipe) checkPhoneDto: checkPhoneDto) {
+    return this.authservice.checkPhone(checkPhoneDto.phone);
+  }
+
   @Get('me')
   @UseGuards(AuthGuard)
   getMe(@getUser() user: Auth) {
     return this.authservice.getMe(user.id);
+  }
+
+  @Patch('update-me')
+  @UseGuards(AuthGuard)
+  updateMe(
+    @getUser() user: Auth,
+    @Body(ValidationPipe) updateMeDto: updateMeDto,
+  ) {
+    return this.authservice.updateMe(updateMeDto, user.id);
+  }
+
+  @Get('logout')
+  @UseGuards(AuthGuard)
+  logout(@getUser() user: Auth) {
+    return this.authservice.logout(user.id);
   }
 }

@@ -16,14 +16,26 @@ export class createAuthDto {
   birthday: Date;
 
   @IsNotEmpty()
-  password: string;
-
-  @IsNotEmpty()
-  passwordConfirm: string;
+  @Matches(/^[0-9]{6}$/)
+  code: string;
 }
 export class loginAuthDto {
   @IsNotEmpty()
   phone: string;
   @IsNotEmpty()
+  code: string;
+}
+export class updatePasswordDto {
+  @IsNotEmpty()
   password: string;
+}
+
+export class updateMeDto {
+  name: string;
+  birthday: Date;
+}
+
+export class checkPhoneDto {
+  @IsNotEmpty()
+  phone: string;
 }

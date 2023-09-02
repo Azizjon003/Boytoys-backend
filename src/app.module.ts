@@ -14,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { GetDataProvider } from './get-data/get-data.providers';
 import { GetDataService } from './get-data/get-data.service';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { GetDataService } from './get-data/get-data.service';
     GetDataModule,
     SliderModule,
     AuthModule,
+    OrdersModule,
   ],
   controllers: [SliderController, AppController, AuthController],
   providers: [...databaseProviders, SliderService, GetDataService, AuthService],

@@ -4,57 +4,72 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { otpGen } from 'otp-gen-agent';
 import { Auth } from './auth.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { createAuthDto, loginAuthDto } from './dto/auth.dto';
+import { createAuthDto, loginAuthDto, updateMeDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
   async signIn(createAuthDto: createAuthDto) {
-    const isConfirm = this.validatePasswordConfirm(
-      createAuthDto.password,
-      createAuthDto.passwordConfirm,
-    );
+    const { phone } = createAuthDto;
 
-    if (!isConfirm) {
-      throw new HttpException("Password doesn't match", 400);
+    const user = await Auth.findOne({
+      where: {
+        phone,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', 400);
     }
 
-    const salt = await bcrypt.genSalt();
-
-    const hashedPassword = await this.hashPassword(
-      createAuthDto.password,
-      salt,
-    );
-    const data = {
-      name: createAuthDto.name,
-      phone: createAuthDto.phone,
-      gender: createAuthDto.gender,
-      birthday: createAuthDto.birthday,
-      password: hashedPassword,
-    };
-    let user;
-    try {
-      user = await Auth.create(data);
-    } catch (er) {
-      console.log(er);
-      throw new UnauthorizedException();
+    if (user.code !== createAuthDto.code) {
+      throw new HttpException('Code not found', 400);
     }
 
-    const userPayload = {
-      id: user.id,
-      phone: user.phone,
-    };
+    if (
+      user.code === createAuthDto.code &&
+      user.phone === createAuthDto.phone
+    ) {
+      const data = {
+        name: createAuthDto.name,
+        phone: createAuthDto.phone,
+        gender: createAuthDto.gender,
+        birthday: createAuthDto.birthday,
+        createdAt: new Date(),
+        token: null,
+        isPhoneVerifired: true,
+        code: null,
+        codeExpired: null,
+      };
 
-    return {
-      access_token: await this.jwtService.signAsync(userPayload),
-    };
+      const userPayload = {
+        id: user.id,
+        phone: user.phone,
+      };
+
+      const token = await this.jwtService.signAsync(userPayload);
+
+      data.token = token;
+      await user.update(data, {
+        where: {
+          id: user.id,
+        },
+      });
+
+      return {
+        access_token: token,
+      };
+    } else {
+      throw new HttpException('Code not found', 400);
+    }
   }
 
   async login(loginAuthDto: loginAuthDto) {
-    const { phone, password } = loginAuthDto;
+    const { phone, code } = loginAuthDto;
     const isPhone = await Auth.findOne({
       where: {
         phone,
@@ -65,26 +80,38 @@ export class AuthService {
       throw new HttpException('Creadentials not found', 400);
     }
 
-    const hashPassword = isPhone.password;
-
-    const isTrue = await this.comparePassword(password, hashPassword);
-
-    if (!isTrue) {
+    if (isPhone.code !== code) {
       throw new HttpException('Creadentials not found', 400);
     }
+
     const userPayload = {
       id: isPhone.id,
       phone: isPhone.phone,
     };
 
+    const token = await this.jwtService.signAsync(userPayload);
+    isPhone.code = null;
+    isPhone.codeExpired = null;
+    isPhone.phoneVerifired = true;
+    isPhone.token = token;
+    await isPhone.save();
+
     return {
-      access_token: await this.jwtService.signAsync(userPayload),
+      access_token: token,
     };
   }
 
   async getMe(id: number) {
     const user = await Auth.findOne({
-      attributes: ['name', 'phone', 'birthday', 'gender', 'role', 'id'],
+      attributes: [
+        'id',
+        'name',
+        'phone',
+        'birthday',
+        'gender',
+        'role',
+        'createdAt',
+      ],
       where: {
         id,
       },
@@ -95,18 +122,53 @@ export class AuthService {
     return user;
   }
 
-  private async hashPassword(password: string, salt: string): Promise<string> {
-    return bcrypt.hash(password, salt);
+  async updateMe(updateMeDto: updateMeDto, id: number) {
+    const user = await Auth.findByPk(id);
+
+    user.name = updateMeDto.name || user.name;
+    user.birthday = updateMeDto.birthday || user.birthday;
+
+    await user.save();
+
+    return user;
   }
 
-  validatePasswordConfirm(password: string, passwordConfirm: string): boolean {
-    return password === passwordConfirm;
+  async checkPhone(phone: string) {
+    const user = await Auth.findOne({
+      where: {
+        phone,
+      },
+    });
+    const generateCode = await otpGen();
+    if (!user) {
+      const authUser = await Auth.create({
+        phone,
+        code: generateCode,
+        codeExpired: new Date(Date.now() + 300000),
+      });
+      return {
+        url: '/sign-in',
+        generateCode,
+        phone: phone,
+      };
+    }
+
+    user.code = generateCode;
+    user.codeExpired = new Date(Date.now() + 300000);
+    await user.save();
+    return {
+      phone: phone,
+      url: '/sign-up',
+      generateCode: generateCode,
+    };
   }
 
-  private async comparePassword(
-    password: string,
-    hashPasswor: string,
-  ): Promise<boolean> {
-    return await bcrypt.compare(password, hashPasswor);
+  async logout(id: number) {
+    const user = await Auth.findByPk(id);
+    user.token = null;
+    await user.save();
+    return {
+      message: 'Logout success',
+    };
   }
 }
