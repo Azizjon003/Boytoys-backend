@@ -11,6 +11,9 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { GetDataProvider } from './get-data/get-data.providers';
+import { GetDataService } from './get-data/get-data.service';
 
 @Module({
   imports: [
@@ -27,6 +30,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [SliderController, AppController, AuthController],
-  providers: [...databaseProviders, SliderService],
+  providers: [...databaseProviders, SliderService, GetDataService, AuthService],
 })
 export class AppModule {}

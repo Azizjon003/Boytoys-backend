@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Slider } from '../slider/slider.entity';
 import { getData } from 'src/get-data/get-data.entity';
+import { Auth } from 'src/auth/auth.entity';
 
 export const databaseProviders = [
   {
@@ -16,7 +17,7 @@ export const databaseProviders = [
         logging: false,
       });
 
-      sequelize.addModels([Slider, getData]);
+      sequelize.addModels([Slider, getData, Auth]);
       await sequelize.sync();
       console.log('Database connected');
       return sequelize;
