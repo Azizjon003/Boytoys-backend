@@ -1,3 +1,4 @@
+import { UUIDV4 } from 'sequelize';
 import {
   AutoIncrement,
   Column,
@@ -11,8 +12,8 @@ import {
 @Table
 export class Auth extends Model {
   @Column({
-    type: DataType.INTEGER,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: UUIDV4,
     primaryKey: true,
   })
   id: number;

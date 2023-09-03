@@ -1,5 +1,6 @@
-import { Column, DataType, Model } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
+@Table
 export class Orders extends Model {
   @Column({
     type: DataType.UUID,
@@ -33,7 +34,6 @@ export class Orders extends Model {
 
   @Column({
     type: DataType.UUID,
-    allowNull: false,
   })
   deliveryId: string;
 
@@ -48,4 +48,11 @@ export class Orders extends Model {
     defaultValue: 'pending',
   })
   status: string;
+
+  @Column({
+    type: DataType.ENUM,
+    values: ['delivery', 'pickup'],
+    allowNull: false,
+  })
+  type: string;
 }
