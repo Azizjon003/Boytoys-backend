@@ -3,11 +3,13 @@ import {
   AutoIncrement,
   Column,
   DataType,
+  HasMany,
   Model,
   NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Orders } from 'src/orders/order.entity';
 
 @Table
 export class Auth extends Model {
@@ -72,4 +74,7 @@ export class Auth extends Model {
     type: DataType.STRING,
   })
   code: string;
+
+  @HasMany(() => Orders)
+  orders: Orders[];
 }

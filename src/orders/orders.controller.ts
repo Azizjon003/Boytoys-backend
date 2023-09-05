@@ -1,8 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
   Post,
   UseGuards,
+  UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { Auth } from 'src/auth/auth.entity';
@@ -36,5 +40,22 @@ export class OrdersController {
       createOrderPickupDto,
       String(user.id),
     );
+  }
+
+  @Get('/')
+  @UseGuards(AuthGuard)
+  getOrders(@getUser() user: Auth) {
+    return this.ordersService.orderMe(String(user.id));
+  }
+
+  @Get('/:id')
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
+  getOrder(
+    @getUser() user: Auth,
+    @Param('id', ParseUUIDPipe)
+    id: string,
+  ) {
+    return this.ordersService.orderMeId(String(user.id), id);
   }
 }

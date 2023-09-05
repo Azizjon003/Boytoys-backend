@@ -1,4 +1,12 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Auth } from 'src/auth/auth.entity';
 
 @Table
 export class Orders extends Model {
@@ -14,12 +22,6 @@ export class Orders extends Model {
     allowNull: false,
   })
   products: any[];
-
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  userId: string;
 
   @Column({
     type: DataType.JSONB,
@@ -55,4 +57,14 @@ export class Orders extends Model {
     allowNull: false,
   })
   type: string;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  userId: string;
+
+  @ForeignKey(() => Auth)
+  @BelongsTo(() => Auth, { as: 'user' })
+  auth: Auth;
 }

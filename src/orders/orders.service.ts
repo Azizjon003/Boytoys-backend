@@ -67,6 +67,36 @@ export class OrdersService {
     };
   }
 
+  async orderMe(id: string) {
+    let order = await Orders.findAll({
+      where: {
+        userId: id,
+      },
+    });
+
+    return order;
+  }
+
+  async orderMeId(id: string, orderId: string) {
+    let order = await Orders.findOne({
+      where: {
+        userId: id,
+        id: orderId,
+      },
+    });
+
+    if (!order) {
+      throw new HttpException('Order not found', 400);
+    }
+    const { total, product } = await this.total(order.products);
+
+    order.products = product;
+    return {
+      order: order,
+      total: total,
+    };
+  }
+
   private async checkProduct(products: produtcs[]) {
     for (let i = 0; i < products.length; i++) {
       const product = await getData.findOne({
