@@ -8,6 +8,7 @@ import {
 } from 'sequelize-typescript';
 import { Auth } from 'src/auth/auth.entity';
 import { Branch } from 'src/branch/branch.entity';
+import { Payments } from 'src/payment/payment.entity';
 
 @Table
 export class Orders extends Model {
@@ -28,11 +29,6 @@ export class Orders extends Model {
     type: DataType.JSONB,
   })
   address: any;
-
-  @Column({
-    type: DataType.UUID,
-  })
-  paymentId: string;
 
   @Column({
     type: DataType.TEXT,
@@ -69,6 +65,14 @@ export class Orders extends Model {
   })
   deliveryId: string;
   @ForeignKey(() => Branch)
-  @BelongsTo(() => Branch, { as: 'payment' })
+  @BelongsTo(() => Branch, { as: 'delivery' })
   branch: Branch;
+
+  @Column({
+    type: DataType.UUID,
+  })
+  paymentId: string;
+  @ForeignKey(() => Payments)
+  @BelongsTo(() => Payments, { as: 'payment' })
+  payments: Payments;
 }

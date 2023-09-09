@@ -4,6 +4,7 @@ import { getData } from 'src/get-data/get-data.entity';
 import { Auth } from 'src/auth/auth.entity';
 import { Orders } from 'src/orders/order.entity';
 import { Branch } from 'src/branch/branch.entity';
+import { Payments } from 'src/payment/payment.entity';
 
 export const databaseProviders = [
   {
@@ -19,7 +20,7 @@ export const databaseProviders = [
         logging: false,
       });
 
-      sequelize.addModels([Slider, getData, Auth, Orders, Branch]);
+      sequelize.addModels([Slider, getData, Auth, Orders, Branch, Payments]);
       await sequelize.sync();
       console.log('Database connected');
       return sequelize;
