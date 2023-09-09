@@ -7,6 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Auth } from 'src/auth/auth.entity';
+import { Branch } from 'src/branch/branch.entity';
 
 @Table
 export class Orders extends Model {
@@ -30,14 +31,8 @@ export class Orders extends Model {
 
   @Column({
     type: DataType.UUID,
-    allowNull: false,
   })
   paymentId: string;
-
-  @Column({
-    type: DataType.UUID,
-  })
-  deliveryId: string;
 
   @Column({
     type: DataType.TEXT,
@@ -67,4 +62,13 @@ export class Orders extends Model {
   @ForeignKey(() => Auth)
   @BelongsTo(() => Auth, { as: 'user' })
   auth: Auth;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  deliveryId: string;
+  @ForeignKey(() => Branch)
+  @BelongsTo(() => Branch, { as: 'payment' })
+  branch: Branch;
 }

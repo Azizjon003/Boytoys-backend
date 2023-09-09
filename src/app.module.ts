@@ -16,6 +16,9 @@ import { GetDataProvider } from './get-data/get-data.providers';
 import { GetDataService } from './get-data/get-data.service';
 import { OrdersModule } from './orders/orders.module';
 import { BranchModule } from './branch/branch.module';
+import { PaymentController } from './payment/payment.controller';
+import { PaymentService } from './payment/payment.service';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -32,8 +35,9 @@ import { BranchModule } from './branch/branch.module';
     AuthModule,
     OrdersModule,
     BranchModule,
+    PaymentModule,
   ],
-  controllers: [SliderController, AppController, AuthController],
-  providers: [...databaseProviders, SliderService, GetDataService, AuthService],
+  controllers: [SliderController, AppController, AuthController, PaymentController],
+  providers: [...databaseProviders, SliderService, GetDataService, AuthService, PaymentService],
 })
 export class AppModule {}
