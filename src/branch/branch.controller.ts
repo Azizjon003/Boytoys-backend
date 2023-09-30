@@ -14,7 +14,9 @@ import {
 import { BranchService } from './branch.service';
 import { createBranchDto } from './dto/branch.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Branches')
 @Controller('branch')
 export class BranchController {
   constructor(private branchService: BranchService) {} // console.log('branch controller');

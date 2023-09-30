@@ -3,11 +3,11 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 @Table
 export class getData extends Model {
   @Column({
-    type: DataType.INTEGER,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @Column({
     type: DataType.STRING,

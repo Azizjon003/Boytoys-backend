@@ -23,7 +23,7 @@ export class GetDataService {
     };
   }
 
-  async findOne(id: number): Promise<getData> {
+  async findOne(id: string): Promise<getData> {
     const data = await getData.findOne({
       where: {
         id,
@@ -54,7 +54,7 @@ export class GetDataService {
   }
 
   async update(
-    id: number,
+    id: string,
     createGetDataDto: CreateGetDataDto,
   ): Promise<getData> {
     const data = await this.findOne(id);
@@ -74,7 +74,7 @@ export class GetDataService {
     return data;
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     const data = await this.findOne(id);
     await data.destroy();
   }

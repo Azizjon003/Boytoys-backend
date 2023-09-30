@@ -12,16 +12,16 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
-        host: 'localhost',
+        host: 'balarama.db.elephantsql.com',
         port: 5432,
-        username: 'postgres',
-        password: '1234',
-        database: 'boytoys',
+        username: 'xkcpfkrr',
+        password: 'YqYpp0_g-hpehJf_xT_XpdNkoFr6oy_K',
+        database: 'xkcpfkrr',
         logging: false,
       });
 
       sequelize.addModels([Slider, getData, Auth, Orders, Branch, Payments]);
-      await sequelize.sync();
+      await sequelize.sync({ alter: true, force: true });
       console.log('Database connected');
       return sequelize;
     },

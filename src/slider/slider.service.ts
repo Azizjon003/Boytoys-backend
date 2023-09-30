@@ -14,7 +14,7 @@ export class SliderService {
     }
     return sliders;
   }
-  async findOne(id: number): Promise<Slider> {
+  async findOne(id: string): Promise<Slider> {
     const slider = await Slider.findByPk(id);
     if (!slider) {
       throw new NotFoundException('Slider not found');
@@ -40,7 +40,7 @@ export class SliderService {
     await slider.save();
     return slider;
   }
-  async delete(id: number): Promise<HttpStatus> {
+  async delete(id: string): Promise<HttpStatus> {
     const slider = await this.findOne(id);
 
     await slider.destroy();

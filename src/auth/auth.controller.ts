@@ -18,7 +18,8 @@ import {
 import { AuthGuard } from './auth.guard';
 import { getUser } from './getUser.decorator';
 import { Auth } from './auth.entity';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authservice: AuthService) {}

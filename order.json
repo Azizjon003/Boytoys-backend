@@ -1,0 +1,18 @@
+{
+  "id": "2a73bce2-1c7b-4d88-9a89-d0723c82e3c6",
+  "products": [{ "id": 1, "cuantity": 10 }],
+  "address": null,
+  "message": null,
+  "status": "pending",
+  "type": "pickup",
+  "userId": "ed42913c-9180-47dd-9008-2af364cf81b9",
+  "deliveryId": "85afda7f-f087-41b9-ba8e-9d4c0a3543f5",
+  "paymentId": "e273374a-100e-4a45-942b-0eb16ac27037",
+  "createdAt": "2023-09-09T15:42:31.989Z",
+  "updatedAt": "2023-09-09T15:42:31.989Z",
+  "auth": null,
+  "branch": null,
+  "payments": null,
+  "payment": null,
+  "delivery": null
+}

@@ -11,12 +11,11 @@ import {
 @Table
 export class Slider extends Model {
   @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @Column({
     type: DataType.STRING,

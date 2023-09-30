@@ -4,9 +4,12 @@ import {
   createOrderPickupDto,
   produtcs,
 } from './dto/orders.dto';
+import * as fs from 'fs';
 import { HttpException, Injectable } from '@nestjs/common';
 import { Orders } from './order.entity';
 import { CreateGetDataDto } from 'src/get-data/dto/createData.dto';
+import { Payments } from 'src/payment/payment.entity';
+import { Branch } from 'src/branch/branch.entity';
 
 @Injectable()
 export class OrdersService {
@@ -79,12 +82,15 @@ export class OrdersService {
 
   async orderMeId(id: string, orderId: string) {
     let order = await Orders.findOne({
+      include: [Payments, Branch],
       where: {
         userId: id,
         id: orderId,
       },
     });
 
+    console.log(order);
+    // fs.writeFileSync('order.json', JSON.stringify(order));
     if (!order) {
       throw new HttpException('Order not found', 400);
     }

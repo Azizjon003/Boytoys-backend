@@ -61,15 +61,16 @@ export class Orders extends Model {
 
   @Column({
     type: DataType.UUID,
-    allowNull: false,
   })
   deliveryId: string;
+
   @ForeignKey(() => Branch)
   @BelongsTo(() => Branch, { as: 'delivery' })
   branch: Branch;
 
   @Column({
     type: DataType.UUID,
+    allowNull: false,
   })
   paymentId: string;
   @ForeignKey(() => Payments)

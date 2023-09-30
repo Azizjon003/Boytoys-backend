@@ -14,7 +14,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { getUser } from 'src/auth/getUser.decorator';
 import { OrdersService } from './orders.service';
 import { createOrderDeliviryDto, createOrderPickupDto } from './dto/orders.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Checkout')
 @Controller('checkout')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
