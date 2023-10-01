@@ -34,4 +34,40 @@ export class Slider extends Model {
     allowNull: false,
   })
   name_eng: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  image: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  image_ru: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  image_eng: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  description: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  description_eng: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  description_ru: string;
 }
