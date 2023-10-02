@@ -14,7 +14,12 @@ import {
 import { PaymentService } from './payment.service';
 import { createPaymentsDto } from './dto/payments.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Payment')
 @Controller('payment')
@@ -28,6 +33,7 @@ export class PaymentController {
     return this.paymentService.getAll();
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create Payment' })
   @ApiResponse({ status: 200, type: createPaymentsDto })
   @Post('/')
@@ -36,6 +42,7 @@ export class PaymentController {
     return this.paymentService.create(createPaymentsDto);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update Payment' })
   @ApiResponse({ status: 200, type: createPaymentsDto })
   @Patch('/:id')
@@ -48,6 +55,7 @@ export class PaymentController {
     return this.paymentService.update(createPaymentsDto, id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete Payment' })
   @ApiResponse({ status: 200, type: Number })
   @Delete('/:id')

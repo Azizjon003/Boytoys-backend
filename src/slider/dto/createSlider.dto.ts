@@ -29,6 +29,7 @@ export class createSliderDto {
   @ApiProperty()
   @IsNotEmpty()
   image: string;
+
   @ApiProperty()
   @IsNotEmpty()
   image_ru: string;

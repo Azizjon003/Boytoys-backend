@@ -14,7 +14,7 @@ import {
 import { BranchService } from './branch.service';
 import { createBranchDto } from './dto/branch.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Branches')
 @Controller('branch')
@@ -22,6 +22,7 @@ export class BranchController {
   constructor(private branchService: BranchService) {} // console.log('branch controller');
 
   @Post('/')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   create(@Body(ValidationPipe) createBranchDto: createBranchDto) {
     return this.branchService.create(createBranchDto);
@@ -33,6 +34,7 @@ export class BranchController {
   }
 
   @Patch('/:id')
+  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   update(
@@ -43,6 +45,7 @@ export class BranchController {
   }
 
   @Delete('/:id')
+  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   delete(@Param('id', ParseUUIDPipe) id: string) {

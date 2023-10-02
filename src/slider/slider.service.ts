@@ -26,6 +26,12 @@ export class SliderService {
     slider.name = createSliderDto.name;
     slider.name_ru = createSliderDto.name_ru;
     slider.name_eng = createSliderDto.name_eng;
+    slider.description = createSliderDto.description;
+    slider.description_eng = createSliderDto.description_eng;
+    slider.description_ru = createSliderDto.description_ru;
+    slider.image = createSliderDto.image;
+    slider.image_eng = createSliderDto.image_eng;
+    slider.image_ru = createSliderDto.image_ru;
     await slider.save();
     return slider;
   }

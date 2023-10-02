@@ -18,7 +18,7 @@ import {
 import { AuthGuard } from './auth.guard';
 import { getUser } from './getUser.decorator';
 import { Auth } from './auth.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -40,12 +40,14 @@ export class AuthController {
   }
 
   @Get('me')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   getMe(@getUser() user: Auth) {
     return this.authservice.getMe(user.id);
   }
 
   @Patch('update-me')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   updateMe(
     @getUser() user: Auth,
@@ -55,6 +57,7 @@ export class AuthController {
   }
 
   @Get('logout')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   logout(@getUser() user: Auth) {
     return this.authservice.logout(user.id);

@@ -21,7 +21,7 @@ export const databaseProviders = [
       });
 
       sequelize.addModels([Slider, getData, Auth, Orders, Branch, Payments]);
-      await sequelize.sync({ alter: true, force: true });
+      await sequelize.sync({ alter: true });
       console.log('Database connected');
       return sequelize;
     },

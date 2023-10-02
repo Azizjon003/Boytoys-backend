@@ -19,7 +19,7 @@ import { UpdateGetDataDto } from './dto/updateData.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('GetData')
-@Controller('get-data')
+@Controller('products')
 export class GetDataController {
   constructor(private getDataService: GetDataService) {}
 

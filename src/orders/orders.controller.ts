@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   UseGuards,
   UsePipes,
@@ -13,14 +14,27 @@ import { Auth } from 'src/auth/auth.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { getUser } from 'src/auth/getUser.decorator';
 import { OrdersService } from './orders.service';
-import { createOrderDeliviryDto, createOrderPickupDto } from './dto/orders.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  createOrderDeliviryDto,
+  createOrderPickupDto,
+  updateOrdersDto,
+} from './dto/orders.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Checkout')
 @Controller('checkout')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  @Post('get-address')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  getAddress(@getUser() user: Auth, @Body() createGetDataDto: any) {
+    return this.ordersService.getAddresses(116516, 1616516515);
+  }
+
   @Post('create-delevery')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   createOrder(
     @getUser() user: Auth,
@@ -33,6 +47,7 @@ export class OrdersController {
   }
 
   @Post('create-pickup')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   createOrderPickup(
     @getUser() user: Auth,
@@ -45,12 +60,14 @@ export class OrdersController {
   }
 
   @Get('/')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   getOrders(@getUser() user: Auth) {
     return this.ordersService.orderMe(String(user.id));
   }
 
   @Get('/:id')
+  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   getOrder(
@@ -59,5 +76,18 @@ export class OrdersController {
     id: string,
   ) {
     return this.ordersService.orderMeId(String(user.id), id);
+  }
+
+  @Patch('/:id')
+  @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
+  updateOrder(
+    @getUser() user: Auth,
+    @Param('id', ParseUUIDPipe)
+    id: string,
+    @Body(ValidationPipe) updateOrdersDto: updateOrdersDto,
+  ) {
+    return this.ordersService.updateOrder(user.id, id, updateOrdersDto);
   }
 }

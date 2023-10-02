@@ -3,6 +3,8 @@ import {
   createOrderDeliviryDto,
   createOrderPickupDto,
   produtcs,
+  typesAddres,
+  updateOrdersDto,
 } from './dto/orders.dto';
 import * as fs from 'fs';
 import { HttpException, Injectable } from '@nestjs/common';
@@ -10,6 +12,7 @@ import { Orders } from './order.entity';
 import { CreateGetDataDto } from 'src/get-data/dto/createData.dto';
 import { Payments } from 'src/payment/payment.entity';
 import { Branch } from 'src/branch/branch.entity';
+import { Auth } from 'src/auth/auth.entity';
 
 @Injectable()
 export class OrdersService {
@@ -103,6 +106,66 @@ export class OrdersService {
     };
   }
 
+  async updateOrder(
+    id: number,
+    orderId: string,
+    updateOrdersDto: updateOrdersDto,
+  ) {
+    let order = await Orders.findOne({
+      include: [
+        {
+          model: Payments,
+          attributes: ['name', 'id'], // attributes: ['name', 'id'],
+          as: 'payment',
+        },
+        {
+          model: Branch,
+          attributes: ['name', 'id'],
+          as: 'delivery',
+        },
+      ],
+      where: {
+        userId: id,
+        id: orderId,
+        type: updateOrdersDto.type,
+      },
+    });
+    if (!order) {
+      throw new HttpException('Order not found', 400);
+    }
+
+    console.log(order);
+    order.products = updateOrdersDto.products || order.products;
+
+    order.paymentId = updateOrdersDto.paymentId || order.paymentId;
+    order.status = updateOrdersDto.status || order.status;
+    if (updateOrdersDto.type === typesAddres.delivery) {
+      order.address = updateOrdersDto.address || order.address;
+    } else {
+      if (updateOrdersDto.type === typesAddres.pickup) {
+        order.deliveryId = updateOrdersDto.deliveryId || order.deliveryId;
+      } else {
+        throw new HttpException('type is not defined', 400);
+      }
+    }
+
+    await order.save();
+
+    const { total, product } = await this.total(order.products);
+
+    order.products = product;
+    return {
+      order: order,
+      total: total,
+    };
+  }
+
+  async getAddresses(letitude: number, longitude: number) {
+    return {
+      address: 'Toshkent viloyati',
+    };
+  }
+
   private async checkProduct(products: produtcs[]) {
     for (let i = 0; i < products.length; i++) {
       const product = await getData.findOne({
@@ -120,6 +183,7 @@ export class OrdersService {
   }
 
   private async total(products: produtcs[]) {
+    console.log(products);
     let total = 0;
     const produc: {
       product: CreateGetDataDto;
@@ -131,6 +195,8 @@ export class OrdersService {
           id: products[i].id,
         },
       });
+
+      console.log(product);
       produc.push({
         product: product,
         cuantity: products[i].cuantity,

@@ -1,9 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNotEmptyObject, IsUUID } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsUUID,
+  isUUID,
+} from 'class-validator';
 
 export interface produtcs {
   id: string;
   cuantity: number;
+}
+export enum typesAddres {
+  delivery = 'delivery',
+  pickup = 'pickup',
 }
 
 interface address {
@@ -50,4 +60,31 @@ export class createOrderPickupDto {
 
   @ApiProperty()
   message: string;
+}
+
+export class updateOrdersDto {
+  @ApiProperty()
+  products: produtcs[];
+
+  @ApiProperty()
+  @IsNotEmptyObject()
+  address: address;
+
+  @ApiProperty()
+  @IsUUID()
+  paymentId: string;
+
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  deliveryId: string;
+
+  @ApiProperty()
+  @IsEnum(typesAddres)
+  type: typesAddres;
+
+  @ApiProperty()
+  @IsEnum(['pending', 'success', 'cancel', 'delivered'])
+  status: string;
 }

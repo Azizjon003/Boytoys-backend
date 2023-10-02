@@ -37,7 +37,7 @@ export class Orders extends Model {
 
   @Column({
     type: DataType.ENUM,
-    values: ['pending', 'success', 'cancel'],
+    values: ['pending', 'success', 'cancel', 'delivered'],
     defaultValue: 'pending',
   })
   status: string;
@@ -49,31 +49,32 @@ export class Orders extends Model {
   })
   type: string;
 
+  @ForeignKey(() => Auth)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
   userId: string;
 
-  @ForeignKey(() => Auth)
   @BelongsTo(() => Auth, { as: 'user' })
   auth: Auth;
 
+  @ForeignKey(() => Branch)
   @Column({
     type: DataType.UUID,
   })
   deliveryId: string;
 
-  @ForeignKey(() => Branch)
   @BelongsTo(() => Branch, { as: 'delivery' })
   branch: Branch;
 
+  @ForeignKey(() => Payments)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
   paymentId: string;
-  @ForeignKey(() => Payments)
+
   @BelongsTo(() => Payments, { as: 'payment' })
   payments: Payments;
 }
