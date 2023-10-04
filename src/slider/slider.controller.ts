@@ -10,6 +10,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -22,6 +23,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { updateStatusDto } from './dto/updateStatus.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+export enum langType {
+  en = 'eng',
+  ru = 'ru',
+}
 
 @ApiTags('Slider')
 @Controller('slider')
@@ -30,8 +35,8 @@ export class SliderController {
   @ApiOperation({ summary: 'Get all slider' })
   @ApiResponse({ status: 200, type: [Slider] })
   @Get('/')
-  findAll(): Promise<Slider[]> {
-    return this.sliderService.findAll();
+  findAll(@Query('lang') lang: langType): Promise<Slider[]> {
+    return this.sliderService.findAll(lang);
   }
 
   @ApiOperation({ summary: 'Create slider' })
@@ -63,7 +68,10 @@ export class SliderController {
   @ApiOperation({ summary: 'Id by Slider' })
   @ApiResponse({ status: 200, type: Slider })
   @Get('/:id')
-  findById(@Param('id', ParseUUIDPipe) id: string): Promise<Slider> {
-    return this.sliderService.findOne(id);
+  findById(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('lang') lang: langType,
+  ): Promise<Slider> {
+    return this.sliderService.findOne(id, lang);
   }
 }

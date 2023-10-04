@@ -3,28 +3,30 @@ import { getData } from './get-data.entity';
 import { Slider } from 'src/slider/slider.entity';
 import { getDataInterface } from './dto/getData.interface';
 import { CreateGetDataDto } from './dto/createData.dto';
-import { Not } from 'sequelize-typescript';
+
+import { langType } from 'src/slider/slider.controller';
 // import { GetDataProvider } from './get-data.providers';
 
 @Injectable()
 export class GetDataService {
+  lang;
   // constructor(private getDataRepository: GetDataProvider) {}
-  async findAll(): Promise<getDataInterface> {
+  async findAll(lang: langType): Promise<getData[]> {
+    const getLang = this.langAttr(lang);
     // const data = await getData.findAll();
     // const slider = await Slider.findAll();
-    const [data, slider] = await Promise.all([
-      getData.findAll(),
-      Slider.findAll(),
-    ]);
+    const data = await getData.findAll({
+      attributes: getLang,
+    });
 
-    return {
-      data,
-      slider,
-    };
+    return data;
   }
 
-  async findOne(id: string): Promise<getData> {
+  async findOne(id: string, lang: langType): Promise<getData> {
+    this.lang = lang;
+    const getLang = this.langAttr(lang);
     const data = await getData.findOne({
+      attributes: getLang,
       where: {
         id,
       },
@@ -57,7 +59,7 @@ export class GetDataService {
     id: string,
     createGetDataDto: CreateGetDataDto,
   ): Promise<getData> {
-    const data = await this.findOne(id);
+    const data = await this.findOne(id, this.lang);
     data.name = createGetDataDto.name || data.name;
     data.name_ru = createGetDataDto.name_ru || data.name_ru;
     data.name_eng = createGetDataDto.name_eng || data.name_eng;
@@ -75,7 +77,45 @@ export class GetDataService {
   }
 
   async delete(id: string): Promise<void> {
-    const data = await this.findOne(id);
+    const data = await this.findOne(id, this.lang);
     await data.destroy();
+  }
+
+  private langAttr(lang: langType) {
+    switch (lang) {
+      case 'ru':
+        return [
+          'id',
+          'name_ru',
+          'description_ru',
+          'images',
+          'price',
+          'discount',
+          'soldout',
+          'count',
+        ];
+      case 'eng':
+        return [
+          'id',
+          'name_eng',
+          'description_eng',
+          'images',
+          'price',
+          'discount',
+          'soldout',
+          'count',
+        ];
+      default:
+        return [
+          'id',
+          'name',
+          'description',
+          'images',
+          'price',
+          'discount',
+          'soldout',
+          'count',
+        ];
+    }
   }
 }

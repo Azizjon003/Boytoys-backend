@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { getDataInterface } from './dto/getData.interface';
 import { CreateGetDataDto } from './dto/createData.dto';
 import { UpdateGetDataDto } from './dto/updateData.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { langType } from 'src/slider/slider.controller';
 
 @ApiTags('GetData')
 @Controller('products')
@@ -26,17 +28,20 @@ export class GetDataController {
   @ApiOperation({ summary: 'Get all data' })
   @ApiResponse({ status: 200, type: [getData] })
   @Get()
-  findAll(): Promise<getDataInterface> {
-    return this.getDataService.findAll();
+  findAll(@Query('lang') lang: langType): Promise<getData[]> {
+    return this.getDataService.findAll(lang);
   }
 
   @ApiOperation({ summary: 'Get data by id' })
   @ApiResponse({ status: 200, type: getData })
   @Get('/:id')
   @UsePipes(ValidationPipe)
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<getData> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('lang') lang: langType,
+  ): Promise<getData> {
     console.log(id);
-    return this.getDataService.findOne(id);
+    return this.getDataService.findOne(id, lang);
   }
 
   @ApiOperation({ summary: 'Create data' })
