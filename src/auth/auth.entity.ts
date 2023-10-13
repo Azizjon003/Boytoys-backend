@@ -75,6 +75,11 @@ export class Auth extends Model {
   })
   code: string;
 
+  @Column({
+    type: DataType.STRING,
+  })
+  signature: string;
+
   @HasMany(() => Orders)
   orders: Orders[];
 }

@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for boytoys on 2023-09-30T16:51:15+05:00
+# fly.toml app configuration file generated for boytoy on 2023-10-13T16:30:57+05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "boytoys"
-primary_region = "arn"
+app = "boytoy"
+primary_region = "nrt"
 
 [build]
 

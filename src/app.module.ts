@@ -37,7 +37,18 @@ import { PaymentModule } from './payment/payment.module';
     BranchModule,
     PaymentModule,
   ],
-  controllers: [SliderController, AppController, AuthController, PaymentController],
-  providers: [...databaseProviders, SliderService, GetDataService, AuthService, PaymentService],
+  controllers: [
+    SliderController,
+    AppController,
+    AuthController,
+    PaymentController,
+  ],
+  providers: [
+    ...databaseProviders,
+    SliderService,
+    GetDataService,
+    AuthService,
+    PaymentService,
+  ],
 })
 export class AppModule {}

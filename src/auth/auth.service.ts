@@ -19,9 +19,11 @@ export class AuthService {
     const user = await Auth.findOne({
       where: {
         phone,
+        signature: '/sign-in',
       },
     });
 
+    console.log(user);
     if (!user) {
       throw new HttpException('User not found', 400);
     }
@@ -41,9 +43,10 @@ export class AuthService {
         birthday: createAuthDto.birthday,
         createdAt: new Date(),
         token: null,
-        isPhoneVerifired: true,
+        phoneVerifired: true,
         code: null,
         codeExpired: null,
+        signature: '/sign-up',
       };
 
       const userPayload = {
@@ -54,6 +57,7 @@ export class AuthService {
       const token = await this.jwtService.signAsync(userPayload);
 
       data.token = token;
+
       await user.update(data, {
         where: {
           id: user.id,
@@ -73,6 +77,7 @@ export class AuthService {
     const isPhone = await Auth.findOne({
       where: {
         phone,
+        signature: '/sign-up',
       },
     });
 
@@ -145,7 +150,9 @@ export class AuthService {
         phone,
         code: generateCode,
         codeExpired: new Date(Date.now() + 300000),
+        signature: '/sign-in',
       });
+
       return {
         url: '/sign-in',
         generateCode,
@@ -153,12 +160,15 @@ export class AuthService {
       };
     }
 
+    const verified = user.phoneVerifired;
     user.code = generateCode;
     user.codeExpired = new Date(Date.now() + 300000);
+    user.signature = !verified ? '/sign-in' : '/sign-up';
+
     await user.save();
     return {
       phone: phone,
-      url: '/sign-up',
+      url: !verified ? '/sign-in' : '/sign-up',
       generateCode: generateCode,
     };
   }
