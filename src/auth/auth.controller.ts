@@ -23,6 +23,7 @@ import { Auth } from './auth.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles, RolesGuard } from './role.guard';
 import { Role } from './helper/role';
+import { updateOrdersDto } from 'src/orders/dto/orders.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {

@@ -20,6 +20,7 @@ import {
   updateOrdersDto,
 } from './dto/orders.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/role.guard';
 
 @ApiTags('Checkout')
 @Controller('checkout')
@@ -89,5 +90,27 @@ export class OrdersController {
     @Body(ValidationPipe) updateOrdersDto: updateOrdersDto,
   ) {
     return this.ordersService.updateOrder(user.id, id, updateOrdersDto);
+  }
+
+  // Admin
+
+  @Patch('/update-order-user/:id/:orderId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  updateOrderByUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+    @Body(ValidationPipe) updateOrdersDto: updateOrdersDto,
+  ) {
+    return this.ordersService.updateOrder(id, orderId, updateOrdersDto);
+  }
+  @Get('/get-orders-user/:id/:orderId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  getOrderByUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('orderId', ParseUUIDPipe) orderId: string,
+  ) {
+    return this.ordersService.orderMeId(id, orderId);
   }
 }

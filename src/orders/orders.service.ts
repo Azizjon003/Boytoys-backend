@@ -107,7 +107,7 @@ export class OrdersService {
   }
 
   async updateOrder(
-    id: number,
+    id: string,
     orderId: string,
     updateOrdersDto: updateOrdersDto,
   ) {

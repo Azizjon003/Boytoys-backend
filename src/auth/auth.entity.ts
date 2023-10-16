@@ -18,7 +18,7 @@ export class Auth extends Model {
     defaultValue: UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @Column({
     type: DataType.STRING,

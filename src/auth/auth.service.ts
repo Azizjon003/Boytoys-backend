@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { createAuthDto, loginAuthDto, updateMeDto } from './dto/auth.dto';
 import { Order } from 'sequelize';
 import { Orders } from 'src/orders/order.entity';
+import { updateOrdersDto } from 'src/orders/dto/orders.dto';
 
 @Injectable()
 export class AuthService {
@@ -109,7 +110,7 @@ export class AuthService {
     };
   }
 
-  async getMe(id: number) {
+  async getMe(id: string) {
     const user = await Auth.findOne({
       attributes: [
         'id',
@@ -130,7 +131,7 @@ export class AuthService {
     return user;
   }
 
-  async updateMe(updateMeDto: updateMeDto, id: number) {
+  async updateMe(updateMeDto: updateMeDto, id: string) {
     const user = await Auth.findByPk(id);
 
     user.name = updateMeDto.name || user.name;
@@ -176,7 +177,7 @@ export class AuthService {
     };
   }
 
-  async logout(id: number) {
+  async logout(id: string) {
     const user = await Auth.findByPk(id);
     user.token = null;
     await user.save();
