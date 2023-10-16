@@ -56,6 +56,12 @@ export class Auth extends Model {
   role: string;
 
   @Column({
+    type: DataType.ENUM,
+    values: ['deleted', 'active'],
+    defaultValue: 'active',
+  })
+  status: string;
+  @Column({
     type: DataType.DATE,
   })
   createdAt?: Date;

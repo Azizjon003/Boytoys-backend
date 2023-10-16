@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -19,6 +21,8 @@ import { AuthGuard } from './auth.guard';
 import { getUser } from './getUser.decorator';
 import { Auth } from './auth.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Roles, RolesGuard } from './role.guard';
+import { Role } from './helper/role';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -61,5 +65,42 @@ export class AuthController {
   @UseGuards(AuthGuard)
   logout(@getUser() user: Auth) {
     return this.authservice.logout(user.id);
+  }
+
+  @Get('get-users')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  getUsers(@getUser() user: Auth) {
+    return this.authservice.getUsers();
+  }
+
+  @Get('get-user/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  getUser(@Param('id', ParseUUIDPipe) id: string) {
+    return this.authservice.getUser(id);
+  }
+
+  @Patch('update-user/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  updateUser(@Param('id', ParseUUIDPipe) id: string, updateMeDto: updateMeDto) {
+    return this.authservice.updateUser(id, updateMeDto);
+  }
+
+  @Patch('/delete-user/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
+    return this.authservice.deleteUser(id);
+  }
+
+  //orders
+
+  @Get('/get-orders-user/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  getOrderbyUser(@Param('id', ParseUUIDPipe) id: string) {
+    return this.authservice.getOrderByUser(id);
   }
 }

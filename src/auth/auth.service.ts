@@ -9,9 +9,12 @@ import { Auth } from './auth.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { createAuthDto, loginAuthDto, updateMeDto } from './dto/auth.dto';
+import { Order } from 'sequelize';
+import { Orders } from 'src/orders/order.entity';
 
 @Injectable()
 export class AuthService {
+  protected attr = ['id', 'name', 'phone', 'birthday'];
   constructor(private jwtService: JwtService) {}
   async signIn(createAuthDto: createAuthDto) {
     const { phone } = createAuthDto;
@@ -180,5 +183,76 @@ export class AuthService {
     return {
       message: 'Logout success',
     };
+  }
+  // Admin
+  async getUsers(): Promise<Auth[]> {
+    const users = await Auth.findAll({
+      attributes: this.attr,
+    });
+
+    return users;
+  }
+  async getUser(id: string): Promise<Auth[]> {
+    const user = await Auth.findAll({
+      where: {
+        id,
+      },
+      attributes: this.attr,
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', 400);
+    }
+
+    return user;
+  }
+
+  async updateUser(id: string, updateMeDto: updateMeDto): Promise<Auth> {
+    const user = await Auth.findByPk(id, {
+      attributes: this.attr,
+    });
+
+    if (user) {
+      throw new HttpException('User not found', 400);
+    }
+
+    user.name = updateMeDto.name || user.name;
+    user.birthday = updateMeDto.birthday || user.birthday;
+
+    await user.save();
+    return user;
+  }
+
+  async deleteUser(id: string): Promise<Auth> {
+    const user = await Auth.findByPk(id, {
+      attributes: this.attr,
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', 400);
+    }
+
+    user.status = 'deleted';
+
+    await user.save();
+    return user;
+  }
+
+  async getOrderByUser(id: string): Promise<Orders[]> {
+    const user = await Auth.findByPk(id);
+    if (!user) {
+      throw new HttpException('User not found', 400);
+    }
+
+    const order = await Orders.findAll({
+      where: {
+        userId: id,
+      },
+    });
+
+    if (!order) {
+      throw new HttpException('Order not found', 400);
+    }
+    return order;
   }
 }

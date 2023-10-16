@@ -1,3 +1,4 @@
+import { RolesGuard } from './role.guard';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthProviders } from './auth.providers';
@@ -15,6 +16,6 @@ import { AuthGuard } from './auth.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, ...AuthProviders, AuthGuard],
+  providers: [AuthService, ...AuthProviders, AuthGuard, RolesGuard],
 })
 export class AuthModule {}
