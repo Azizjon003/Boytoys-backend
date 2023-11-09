@@ -23,7 +23,7 @@ export class AuthService {
     const user = await Auth.findOne({
       where: {
         phone,
-        signature: '/sign-in',
+        signature: '/sign-up',
       },
     });
 
@@ -50,7 +50,7 @@ export class AuthService {
         phoneVerifired: true,
         code: null,
         codeExpired: null,
-        signature: '/sign-up',
+        signature: '/sign-in',
       };
 
       const userPayload = {
@@ -81,7 +81,7 @@ export class AuthService {
     const isPhone = await Auth.findOne({
       where: {
         phone,
-        signature: '/sign-up',
+        signature: '/sign-in',
       },
     });
 
@@ -154,11 +154,11 @@ export class AuthService {
         phone,
         code: generateCode,
         codeExpired: new Date(Date.now() + 300000),
-        signature: '/sign-in',
+        signature: '/sign-up',
       });
 
       return {
-        url: '/sign-in',
+        url: '/sign-up',
         generateCode,
         phone: phone,
       };
@@ -167,12 +167,12 @@ export class AuthService {
     const verified = user.phoneVerifired;
     user.code = generateCode;
     user.codeExpired = new Date(Date.now() + 300000);
-    user.signature = !verified ? '/sign-in' : '/sign-up';
+    user.signature = !verified ? '/sign-up' : '/sign-in';
 
     await user.save();
     return {
       phone: phone,
-      url: !verified ? '/sign-in' : '/sign-up',
+      url: !verified ? '/sign-up' : '/sign-in',
       generateCode: generateCode,
     };
   }

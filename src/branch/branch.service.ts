@@ -14,7 +14,7 @@ export class BranchService {
 
   async getAll() {
     const branch = await Branch.findAll();
-    if (branch.length === 0) throw new HttpException('Branches not found', 400);
+    // if (branch.length === 0) throw new HttpException('Branches not found', 400);
     return branch;
   }
 

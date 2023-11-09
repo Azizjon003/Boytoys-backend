@@ -16,8 +16,8 @@ export class PaymentService {
 
   async getAll() {
     const payments = await Payments.findAll({});
-    if (payments.length === 0)
-      throw new HttpException('Payments not found', 400);
+    // if (payments.length === 0)
+    //   throw new HttpException('Payments not found', 400);
 
     return payments;
   }

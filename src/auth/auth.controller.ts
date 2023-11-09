@@ -29,12 +29,12 @@ import { updateOrdersDto } from 'src/orders/dto/orders.dto';
 export class AuthController {
   constructor(private authservice: AuthService) {}
 
-  @Post('sign-in')
+  @Post('sign-up')
   signIn(@Body(ValidationPipe) createAuthDto: createAuthDto) {
     return this.authservice.signIn(createAuthDto);
   }
 
-  @Post('sign-up')
+  @Post('sign-in')
   signUp(@Body(ValidationPipe) loginAuthDto: loginAuthDto) {
     return this.authservice.login(loginAuthDto);
   }

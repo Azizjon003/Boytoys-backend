@@ -14,9 +14,9 @@ export class SliderService {
     const sliders = await Slider.findAll({
       attributes: getLang,
     });
-    if (sliders.length === 0) {
-      throw new NotFoundException('No sliders found');
-    }
+    // if (sliders.length === 0) {
+    //   throw new NotFoundException('No sliders found');
+    // }
     return sliders;
   }
   async findOne(id: string, lang: langType): Promise<Slider> {

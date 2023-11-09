@@ -25,7 +25,7 @@ export class AppController {
     }),
   )
   async local(@UploadedFile() file: Express.Multer.File) {
-    const url = `http://localhost:3000/img/${file.filename}`;
+    const url = `https://boytoy.fly.dev/img/${file.filename}`;
     return {
       status: 'success',
       url: url,
