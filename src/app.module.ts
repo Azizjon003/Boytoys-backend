@@ -50,5 +50,4 @@ import { PaymentModule } from './payment/payment.module';
     PaymentService,
   ],
 })
-
 export class AppModule {}
