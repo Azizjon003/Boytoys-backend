@@ -12,7 +12,6 @@ import { AppController } from './app.controller';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
-import { GetDataProvider } from './get-data/get-data.providers';
 import { GetDataService } from './get-data/get-data.service';
 import { OrdersModule } from './orders/orders.module';
 import { BranchModule } from './branch/branch.module';
@@ -51,4 +50,5 @@ import { PaymentModule } from './payment/payment.module';
     PaymentService,
   ],
 })
+
 export class AppModule {}
